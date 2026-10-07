@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Voice Ledger Ghana</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400&display=swap"
+    />
+    <link rel="stylesheet" href="hark.css" />
+    <link rel="stylesheet" href="hark-hero.css" />
+  </head>
+  <body>
+    <div class="page" id="top">
+      <header class="nav glass" data-auto></header>
+      <main class="main">
+        <section class="hero">
+          <img class="hero__img" src="hero.webp" alt="A Ghanaian market trader at her stall, phone in her apron pocket and an earpiece in, handing change to a customer" />
+          <div class="hero__copy">
+            <p class="hero__eyebrow">Voice Ledger Ghana</p>
+            <h1>Your sales, recorded while you sell.</h1>
+            <p class="hero__sub">Voice Ledger listens to the conversations at your stall and keeps your books for you, in Twi, Ga, Ewe, and English.</p>
+            <p class="hero__meta">No typing · No notebook · Pilot in Accra and Kumasi</p>
+          </div>
+          <aside class="callout" aria-label="Join the pilot">
+            <p class="callout__head"><span class="hark-mark" data-size="16"></span> Join the pilot</p>
+            <p class="callout__lead"><strong>We're recruiting our first traders and partners.</strong> A full, accurate ledger from an ordinary day of selling.</p>
+            <div class="links">
+              <a class="btn" href="https://github.com/Christorious/ghana-voice-ledger" target="_blank" rel="noopener">See the project on GitHub</a>
+              <a class="btn" href="record.html">Help collect voices</a>
+            </div>
+          </aside>
+          <p class="hero__credit">A trader in Accra, phone in her apron, serving a customer</p>
+        </section>
+
+        <section class="section" id="problem" data-nav="Problem">
+          <div class="head">
+            <p class="head__eyebrow">The problem</p>
+            <h2>Millions of traders keep their books in their heads.</h2>
+          </div>
+          <div class="prose">
+            <p>Across Ghana's markets, most traders, most of them women, track sales from memory or in exercise books. At the end of a busy day nobody knows exactly what sold, what is owed, or whether the day made money.</p>
+            <p>Without records, traders are shut out of credit and can't see how their business is really doing.</p>
+          </div>
+        </section>
+
+        <section class="section" id="how" data-nav="How it works">
+          <div class="head">
+            <p class="head__eyebrow">How it works</p>
+            <h2>She sells as she always has. We keep the books.</h2>
+          </div>
+          <div class="steps">
+            <article class="step">
+              <div class="step__intro"><p class="step__num">01</p><p class="step__eyebrow">Morning</p></div>
+              <div>
+                <h3>Phone in the apron</h3>
+                <p>She keeps her phone in her apron pocket, or pairs a Bluetooth headset or earpiece.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step__intro"><p class="step__num">02</p><p class="step__eyebrow">All day</p></div>
+              <div>
+                <h3>It listens through the day</h3>
+                <p>Voice Ledger picks up her conversations with customers as she sells, in the language she already speaks, including mixed Twi and English and local units like "olonka" and "bag".</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step__intro"><p class="step__num">03</p><p class="step__eyebrow">Every sale</p></div>
+              <div>
+                <h3>Every sale captured</h3>
+                <ul class="step__pills"><li>Item</li><li>Quantity</li><li>Price</li><li>Buyer or debtor</li></ul>
+                <p>The built-in intelligence recognises each sale and writes it down, including who bought it or who owes.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step__intro"><p class="step__num">04</p><p class="step__eyebrow">Anytime</p></div>
+              <div>
+                <h3>Check anytime</h3>
+                <p>She opens the app whenever she likes to see today's total, confirm each sale was recorded right, and correct anything.</p>
+              </div>
+            </article>
+            <article class="step">
+              <div class="step__intro"><p class="step__num">05</p><p class="step__eyebrow">Closing time</p></div>
+              <div>
+                <h3>End-of-day summary</h3>
+                <p>A plain-language summary in her own language: total sales, best sellers, money owed, and spending.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section" id="different" data-nav="Why us">
+          <div class="head">
+            <p class="head__eyebrow">What makes it different</p>
+            <h2>Built for the market, not the office.</h2>
+          </div>
+          <div class="cards">
+            <div><h3>Hands-free</h3><p>No typing, no buttons while serving customers.</p></div>
+            <div><h3>Speaks Ghanaian languages</h3><p>Twi, Ga, Ewe, and English, including code-switching.</p></div>
+            <div><h3>Offline first</h3><p>Works in the market without data. On-device speech and speaker identification (TensorFlow Lite), with encrypted local storage.</p></div>
+            <div><h3>The trader is in control</h3><p>She reviews and edits every entry. Recordings stay on her phone.</p></div>
+            <div><h3>Export when needed</h3><p>CSV, PDF, and Excel records she can show a bank, susu group, or microfinance lender.</p></div>
+          </div>
+        </section>
+
+        <section class="section" id="intelligence" data-nav="Intelligence">
+          <div class="head">
+            <p class="head__eyebrow">The intelligence</p>
+            <h2>Built with Claude, to understand how markets really talk.</h2>
+          </div>
+          <div class="pair">
+            <div class="prose">
+              <p>Claude turns messy, code-switched market conversations into structured sales records.</p>
+              <p>It writes daily and weekly business insights in the trader's own language, and powers a simple assistant she can just ask.</p>
+            </div>
+            <div class="cards">
+              <div>
+                <h3>Ask the assistant</h3>
+                <p class="quote">"How much did I make this week?"</p>
+                <p class="quote">"Who still owes me?"</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="stack" data-nav="Built on">
+          <div class="head">
+            <p class="head__eyebrow">Built on</p>
+            <h2>An Android app that does the heavy lifting on the phone.</h2>
+          </div>
+          <div class="breakdown">
+            <dl>
+              <div class="row"><dt>App</dt><dd>Kotlin · Jetpack Compose</dd></div>
+              <div class="row"><dt>On device</dt><dd>Speech and speaker identification</dd></div>
+              <div class="row"><dt>Understanding and summaries</dt><dd>Claude</dd></div>
+              <div class="row"><dt>Pilot <small>Planned</small></dt><dd>Kumasi and Accra markets</dd></div>
+            </dl>
+          </div>
+        </section>
+
+        <section class="section" id="voices">
+          <div class="head">
+            <h2>Help us collect market voices</h2>
+          </div>
+          <div class="prose">
+            <p>We're gathering real market conversations, recorded with everyone's agreement, to teach Voice Ledger how Ghanaian trading really sounds. Have a phone and a market nearby? Record a sale in under a minute.</p>
+          </div>
+          <div class="links">
+            <a class="btn" href="record.html">Help collect voices</a>
+          </div>
+        </section>
+
+        <section class="section" id="founder" data-nav="Founder">
+          <div class="head">
+            <p class="head__eyebrow">Founder</p>
+            <h2>Christian Dzidula Dotsey</h2>
+            <p class="head__sub">Founder · Computer Engineering, KNUST</p>
+          </div>
+          <div class="prose">
+            <p>Christian's background is in machine learning for Ghanaian languages, including Twi and Pidgin speech, and in embedded systems.</p>
+          </div>
+          <div class="links">
+            <a class="btn" href="https://github.com/Christorious" target="_blank" rel="noopener">GitHub</a>
+            <a class="btn" href="https://www.linkedin.com/in/christian-dzidula-dotsey-26855b113" target="_blank" rel="noopener">LinkedIn</a>
+          </div>
+        </section>
+
+        <section class="section" id="pilot" data-nav="Pilot">
+          <div class="head">
+            <p class="head__eyebrow">Join the pilot</p>
+            <h2>Help us bring the first ledgers to market.</h2>
+          </div>
+          <aside class="callout" aria-label="Join the pilot">
+            <p class="callout__head">Join the pilot</p>
+            <p class="callout__lead"><strong>We're looking for traders, market associations, and partners</strong> for our first pilot in Accra and Kumasi.</p>
+            <a class="btn" href="https://github.com/Christorious/ghana-voice-ledger" target="_blank" rel="noopener">See the project on GitHub</a>
+          </aside>
+        </section>
+      </main>
+      <footer class="foot">
+        <p>Voice Ledger Ghana · Accra, Ghana · © 2026</p>
+        <nav aria-label="Back to sections" data-auto></nav>
+        <a class="badge" href="https://hark.com/" target="_blank" rel="noopener"><span class="hark-mark"></span><span>built by hark</span></a>
+      </footer>
+    </div>
+    <script src="hark.js"></script>
+  </body>
+</html>

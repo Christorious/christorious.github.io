@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Voice Ledger Ghana</title>
+    <meta name="description" content="Record real market sales to help build AI voice bookkeeping for Ghanaian traders." />
+    <meta name="theme-color" content="#1d1d1f" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%23da2f35'/%3E%3C/svg%3E" />
+    <link id="manifest" rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22Voice%20Ledger%20Ghana%22%2C%22short_name%22%3A%22Voice%20Ledger%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23f5f5f7%22%2C%22theme_color%22%3A%22%231d1d1f%22%7D" />
+    <script>
+      // Build the home-screen manifest with absolute URLs, since a data: manifest cannot resolve relative ones.
+      (function () {
+        var base = location.href.split("#")[0].split("?")[0];
+        var scope = base.slice(0, base.lastIndexOf("/") + 1);
+        var icon = "data:image/svg+xml," + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='#1d1d1f'/><circle cx='256' cy='256' r='150' fill='#da2f35'/></svg>");
+        var m = {
+          name: "Voice Ledger Ghana",
+          short_name: "Voice Ledger",
+          description: "Help us build AI for African markets.",
+          start_url: base,
+          scope: scope,
+          display: "standalone",
+          orientation: "portrait",
+          background_color: "#f5f5f7",
+          theme_color: "#1d1d1f",
+          icons: [{ src: icon, sizes: "any", type: "image/svg+xml", purpose: "any" }]
+        };
+        document.getElementById("manifest").href = "data:application/manifest+json," + encodeURIComponent(JSON.stringify(m));
+      })();
+    </script>
+    <link rel="stylesheet" href="hark.css" />
+    <link rel="stylesheet" href="hark-hero.css" />
+    <style>
+      .x-app { width: 100%; max-width: 560px; margin: 0 auto; display: grid; gap: 24px; font-size: 19px; line-height: 1.4; }
+      .x-header { padding: 8px 0 16px; border-bottom: 1px solid var(--stroke-secondary); }
+      .x-header h1 { margin: 0; font: var(--type-title); font-weight: var(--weight-medium); }
+      .x-header p { margin: 4px 0 0; font: var(--type-lede); font-weight: var(--weight-regular); color: var(--text-secondary); }
+      .x-screen { display: grid; gap: 24px; }
+      .x-screen[hidden] { display: none; }
+      .x-screen h2 { margin: 0; font: var(--type-title); font-weight: var(--weight-medium); outline: none; }
+      .x-progress-label { margin: 0 0 -12px; font: var(--type-label); color: var(--text-secondary); }
+      .x-lead { margin: 0; font-weight: var(--weight-medium); font-size: var(--size-heading); }
+      .x-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+      .x-list li { padding: 16px 18px; border-radius: var(--r-m); background: var(--fill-tertiary); }
+      .x-steps { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; counter-reset: x; }
+      .x-steps li { counter-increment: x; display: grid; grid-template-columns: 56px 1fr; gap: 16px; align-items: center; padding: 18px; border-radius: var(--r-m); background: var(--fill-tertiary); font-size: var(--size-heading); }
+      .x-steps li::before { content: counter(x); display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; background: var(--fill-primary); color: var(--text-primary-on); font: var(--type-figure); font-weight: var(--weight-medium); }
+      .x-actions { display: grid; gap: 12px; }
+      .x-btn { display: flex; align-items: center; justify-content: center; width: 100%; min-height: 64px; padding: 14px 20px; border-radius: var(--r-m); border: 1px solid var(--stroke-primary); background: var(--fill-primary-on); color: var(--text-primary); font: var(--weight-medium) var(--size-heading)/1.2 var(--sans); cursor: pointer; transition: box-shadow var(--dur-quick) ease, transform var(--dur-quick) var(--ease-out); -webkit-tap-highlight-color: transparent; }
+      .x-btn:hover { box-shadow: inset 0 0 0 100px var(--hover-wash); }
+      .x-btn:active { transform: scale(0.98); }
+      .x-btn--primary { background: var(--fill-primary); color: var(--text-primary-on); border-color: var(--fill-primary); }
+      .x-btn--primary:hover { box-shadow: inset 0 0 0 100px var(--hover-wash-primary-on); }
+      .x-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+      .x-app [hidden] { display: none !important; }
+      .x-btn:focus-visible, .x-field:focus-visible, .x-rec:focus-visible { outline: 3px solid var(--text-primary); outline-offset: 3px; }
+      .x-stage { display: grid; justify-items: center; gap: 20px; padding: 16px 0; text-align: center; }
+      .x-rec { position: relative; width: 200px; height: 200px; border-radius: 50%; border: 0; background: var(--fill-system-red); color: #fff; font: var(--weight-bold) 24px/1.1 var(--sans); cursor: pointer; display: grid; place-items: center; box-shadow: 0 0 0 10px color-mix(in srgb, var(--fill-system-red) 18%, transparent), var(--hark-shadow); -webkit-tap-highlight-color: transparent; transition: transform var(--dur-quick) var(--ease-out); }
+      .x-rec:active { transform: scale(0.96); }
+      .x-rec[disabled] { cursor: default; }
+      .x-rec span { display: grid; justify-items: center; gap: 8px; }
+      .x-rec svg { width: 48px; height: 48px; }
+      .x-rec.is-live { animation: x-pulse 1.4s ease-in-out infinite; }
+      @keyframes x-pulse {
+        0%, 100% { box-shadow: 0 0 0 10px color-mix(in srgb, var(--fill-system-red) 25%, transparent), var(--hark-shadow); }
+        50% { box-shadow: 0 0 0 30px color-mix(in srgb, var(--fill-system-red) 8%, transparent), var(--hark-shadow); }
+      }
+      @media (prefers-reduced-motion: reduce) { .x-rec.is-live { animation: none; } .x-spin { animation-duration: 3s; } }
+      .x-timer { margin: 0; font: var(--weight-medium) 56px/1 var(--sans); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+      .x-hint { margin: 0; color: var(--text-secondary); }
+      .x-level { width: 100%; max-width: 280px; height: 10px; border-radius: var(--r-pill); background: var(--fill-tertiary); overflow: hidden; }
+      .x-level i { display: block; height: 100%; width: 0; background: var(--fill-system-green); transition: width 100ms linear; }
+      .x-msg { margin: 0; padding: 16px 18px; border-radius: var(--r-m); background: var(--fill-tertiary); border-left: 4px solid var(--fill-system-red); font-size: 18px; text-align: left; }
+      .x-msg[hidden] { display: none; }
+      .x-msg strong { display: block; margin-bottom: 4px; }
+      .x-msg ol { margin: 8px 0 0; padding-left: 22px; }
+      .x-label { display: block; margin-bottom: 8px; font-weight: var(--weight-medium); }
+      .x-label small { font: var(--type-small); color: var(--text-secondary); }
+      .x-field { width: 100%; min-height: 60px; padding: 14px 16px; border-radius: var(--r-s); border: 1px solid var(--stroke-primary); background: var(--fill-primary-on); color: var(--text-primary); font: var(--weight-regular) 18px/1.3 var(--sans); }
+      select.x-field { appearance: none; -webkit-appearance: none; padding-right: 48px; background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%); background-position: calc(100% - 26px) 50%, calc(100% - 19px) 50%; background-size: 7px 7px; background-repeat: no-repeat; }
+      textarea.x-field { min-height: 110px; resize: vertical; }
+      .x-field.is-invalid { border-color: var(--fill-system-red); box-shadow: 0 0 0 1px var(--fill-system-red); }
+      .x-error { margin: 8px 0 0; color: var(--fill-system-red); font: var(--type-label); }
+      .x-error[hidden] { display: none; }
+      .x-listen { padding: 16px; border-radius: var(--r-m); background: var(--fill-tertiary); }
+      .x-listen p { margin: 0 0 8px; font: var(--type-label); color: var(--text-secondary); }
+      .x-listen audio { width: 100%; }
+      .x-spin { width: 64px; height: 64px; border-radius: 50%; border: 6px solid var(--fill-tertiary); border-top-color: var(--text-primary); animation: x-rot 0.9s linear infinite; }
+      @keyframes x-rot { to { transform: rotate(360deg); } }
+      .x-bar { width: 100%; height: 14px; border-radius: var(--r-pill); background: var(--fill-tertiary); overflow: hidden; }
+      .x-bar i { display: block; height: 100%; width: 0; background: var(--fill-primary); border-radius: var(--r-pill); transition: width 200ms var(--ease-out); }
+      .x-pct { margin: 0; font: var(--type-label); color: var(--text-secondary); font-variant-numeric: tabular-nums; }
+      .x-check { width: 96px; height: 96px; border-radius: 50%; background: var(--fill-system-green); color: #fff; display: grid; place-items: center; }
+      .x-check svg { width: 52px; height: 52px; }
+      .x-state { display: grid; justify-items: center; gap: 20px; text-align: center; width: 100%; }
+      .x-state[hidden] { display: none; }
+      .x-state .x-actions { width: 100%; }
+      .x-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+    </style>
+  </head>
+  <body>
+    <div class="page" id="top">
+      <main class="main">
+        <div class="x-app">
+          <header class="x-header">
+            <h1>Voice Ledger Ghana</h1>
+            <p>Help us build AI for African markets.</p>
+          </header>
+
+          <!-- 1. Consent -->
+          <section class="x-screen" id="s-consent" aria-labelledby="h-consent">
+            <p class="x-progress-label">Step 1 of 4</p>
+            <h2 id="h-consent" tabindex="-1">Before you record, please read this carefully.</h2>
+            <ul class="x-list">
+              <li>This recording will be used to build AI voice bookkeeping technology for Ghanaian market traders (Voice Ledger Ghana).</li>
+              <li>Only record conversations where the people speaking know they are being recorded and agree.</li>
+              <li>Recordings are stored privately and used only to develop and test this technology.</li>
+              <li>Participation is voluntary. You may stop at any time.</li>
+            </ul>
+            <div class="x-actions">
+              <button class="x-btn x-btn--primary" type="button" id="b-agree">I Agree &amp; Continue</button>
+            </div>
+          </section>
+
+          <!-- 2. How to record -->
+          <section class="x-screen" id="s-how" aria-labelledby="h-how" hidden>
+            <p class="x-progress-label">Step 2 of 4</p>
+            <h2 id="h-how" tabindex="-1">How to record</h2>
+            <ol class="x-steps">
+              <li>Go to a market or busy trading area.</li>
+              <li>Ask the trader and customer if you may record, then press the red button during a real sale.</li>
+              <li>Press Stop when the sale ends.</li>
+            </ol>
+            <div class="x-actions">
+              <button class="x-btn x-btn--primary" type="button" id="b-ready">I'm Ready</button>
+            </div>
+          </section>
+
+          <!-- 3. Record -->
+          <section class="x-screen" id="s-record" aria-labelledby="h-record" hidden>
+            <p class="x-progress-label">Step 3 of 4</p>
+            <h2 id="h-record" tabindex="-1">Record a sale</h2>
+            <div class="x-stage">
+              <button class="x-rec" type="button" id="b-rec" aria-label="Start recording">
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="currentColor"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+                  <span id="rec-label">Record</span>
+                </span>
+              </button>
+              <p class="x-timer" id="timer" aria-live="off">00:00</p>
+              <div class="x-level" id="level" hidden aria-hidden="true"><i></i></div>
+              <p class="x-hint" id="rec-hint">Tap the red button when the sale begins. Record at least 30 seconds.</p>
+              <p class="x-sr" id="rec-status" role="status" aria-live="polite"></p>
+              <div class="x-actions" style="width:100%">
+                <button class="x-btn x-btn--primary" type="button" id="b-stop" hidden>Stop</button>
+              </div>
+              <div class="x-msg" id="rec-msg" role="alert" hidden></div>
+            </div>
+          </section>
+
+          <!-- 4. Where -->
+          <section class="x-screen" id="s-where" aria-labelledby="h-where" hidden>
+            <p class="x-progress-label">Step 4 of 4</p>
+            <h2 id="h-where" tabindex="-1">Where did you record this?</h2>
+            <div class="x-listen">
+              <p>Listen back <span id="dur-label"></span></p>
+              <audio id="player" controls preload="metadata"></audio>
+            </div>
+            <div>
+              <label class="x-label" for="location">Location <small>(required)</small></label>
+              <select class="x-field" id="location" required aria-describedby="loc-error">
+                <option value="">Choose a location…</option>
+                <option>Kejetia Market (Kumasi)</option>
+                <option>Makola Market (Accra)</option>
+                <option>Madina Market (Accra)</option>
+                <option>Kaneshie Market (Accra)</option>
+                <option>Asafo Market (Kumasi)</option>
+                <option>Other market</option>
+                <option>Other location</option>
+              </select>
+              <p class="x-error" id="loc-error" hidden>Please choose where you recorded this.</p>
+            </div>
+            <div>
+              <label class="x-label" for="notes">Anything else to note? <small>(e.g. type of goods being sold, language spoken)</small></label>
+              <textarea class="x-field" id="notes" maxlength="1000"></textarea>
+            </div>
+            <div class="x-actions">
+              <button class="x-btn x-btn--primary" type="button" id="b-upload">Upload Recording</button>
+              <button class="x-btn" type="button" id="b-discard">Discard and record again</button>
+            </div>
+          </section>
+
+          <!-- 5. Uploading -->
+          <section class="x-screen" id="s-upload" aria-labelledby="h-upload" hidden>
+            <h2 id="h-upload" class="x-sr" tabindex="-1">Upload</h2>
+            <div class="x-state" id="u-busy">
+              <div class="x-spin" aria-hidden="true"></div>
+              <p class="x-lead">Uploading your recording securely...</p>
+              <div class="x-bar" role="progressbar" aria-label="Upload progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><i></i></div>
+              <p class="x-pct" id="pct">Preparing…</p>
+            </div>
+            <div class="x-state" id="u-done" hidden>
+              <div class="x-check" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+              <p class="x-lead" role="status">Thank you! Your recording has been received. You can record another if you like.</p>
+              <div class="x-actions"><button class="x-btn x-btn--primary" type="button" id="b-another">Record Another</button></div>
+            </div>
+            <div class="x-state" id="u-fail" hidden>
+              <p class="x-msg" role="alert" id="fail-msg">Upload failed. Check your data connection and try again.</p>
+              <div class="x-actions">
+                <button class="x-btn x-btn--primary" type="button" id="b-retry">Try Again</button>
+                <button class="x-btn" type="button" id="b-back">Back</button>
+              </div>
+            </div>
+            <div class="x-state" id="u-off" hidden>
+              <p class="x-msg" role="alert">Uploads aren't switched on yet.</p>
+              <div class="x-actions"><button class="x-btn" type="button" id="b-back2">Back</button></div>
+            </div>
+          </section>
+        </div>
+      </main>
+      <footer class="foot">
+        <p>Voice Ledger Ghana · Accra, Ghana</p>
+      </footer>
+    </div>
+    <script src="hark.js"></script>
+    <script>
+      // =====================================================================
+      // UPLOAD URL: paste your Google Apps Script web app URL below.
+      // Until it is replaced, the app shows "Uploads aren't switched on yet."
+      // =====================================================================
+      const SCRIPT_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+      (function () {
+        "use strict";
+        var MIN_SECONDS = 30;
+        var SILENCE_RMS = 0.015;      // RMS level below which a frame counts as silent
+        var MIN_VOICED_FRAMES = 15;   // ~1.5 s of sound (frames sampled every 100 ms)
+
+        var $ = function (id) { return document.getElementById(id); };
+        var screens = ["s-consent", "s-how", "s-record", "s-where", "s-upload"];
+        var consentGiven = false;
+
+        // Recording state
+        var stream = null, recorder = null, chunks = [], mimeType = "";
+        var audioCtx = null, analyser = null, levelTimer = null, tickTimer = null;
+        var startedAt = 0, voicedFrames = 0, recording = false;
+        // The finished recording, kept until it uploads so Try Again resends it
+        var rec = null; // { blob, url, mime, duration, base64 }
+
+        function show(id) {
+          if (id !== "s-consent" && !consentGiven) id = "s-consent";
+          screens.forEach(function (s) { $(s).hidden = s !== id; });
+          window.scrollTo(0, 0);
+          var h = $(id).querySelector("h2");
+          if (h) h.focus({ preventScroll: true });
+        }
+
+        function fmt(sec) {
+          sec = Math.max(0, Math.floor(sec));
+          var m = Math.floor(sec / 60), s = sec % 60;
+          return (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+        }
+
+        function showRecMsg(html) {
+          var m = $("rec-msg");
+          if (!html) { m.hidden = true; m.innerHTML = ""; return; }
+          m.innerHTML = html;
+          m.hidden = false;
+        }
+
+        function pickMime() {
+          if (typeof MediaRecorder === "undefined" || !MediaRecorder.isTypeSupported) return "";
+          var types = ["audio/webm;codecs=opus", "audio/webm", "audio/mp4", "audio/ogg;codecs=opus", "audio/aac"];
+          for (var i = 0; i < types.length; i++) if (MediaRecorder.isTypeSupported(types[i])) return types[i];
+          return "";
+        }
+
+        function setRecUI(live) {
+          var b = $("b-rec");
+          b.classList.toggle("is-live", live);
+          b.disabled = live;
+          b.setAttribute("aria-label", live ? "Recording" : "Start recording");
+          $("rec-label").textContent = live ? "Recording" : "Record";
+          $("b-stop").hidden = !live;
+          $("level").hidden = !live;
+          $("rec-hint").textContent = live
+            ? "Recording… press Stop when the sale ends."
+            : "Tap the red button when the sale begins. Record at least 30 seconds.";
+        }
+
+        function micHelp(err) {
+          var name = err && err.name;
+          if (name === "NotFoundError" || name === "OverconstrainedError") {
+            return "<strong>We couldn't find a microphone.</strong>Please check your phone's microphone is working and try again.";
+          }
+          if (name === "NotReadableError") {
+            return "<strong>The microphone is busy.</strong>Close any other app using the microphone (calls, voice notes) and try again.";
+          }
+          if (!window.isSecureContext) {
+            return "<strong>Recording needs a secure page.</strong>Open this page with a web address starting with https://.";
+          }
+          return "<strong>We need your microphone to record.</strong>To allow it in Chrome:" +
+            "<ol><li>Tap the icon to the left of the web address (a lock or sliders).</li>" +
+            "<li>Tap <b>Permissions</b> (or <b>Site settings</b>), then <b>Microphone</b>.</li>" +
+            "<li>Choose <b>Allow</b>, then tap the red button again.</li></ol>" +
+            "If you don't see it: Chrome menu ⋮ → Settings → Site settings → Microphone.";
+        }
+
+        function getStream() {
+          var ideal = { echoCancellation: false, noiseSuppression: false, autoGainControl: true, channelCount: 1 };
+          var sup = navigator.mediaDevices.getSupportedConstraints ? navigator.mediaDevices.getSupportedConstraints() : {};
+          if (sup.sampleRate) ideal.sampleRate = { ideal: 16000 };
+          return navigator.mediaDevices.getUserMedia({ audio: ideal }).catch(function (err) {
+            if (err && (err.name === "OverconstrainedError" || err.name === "TypeError")) {
+              return navigator.mediaDevices.getUserMedia({ audio: true });
+            }
+            throw err;
+          });
+        }
+
+        function startLevel() {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          if (!AC) { voicedFrames = MIN_VOICED_FRAMES; return; } // cannot check, assume speech
+          try {
+            audioCtx = new AC();
+            if (audioCtx.state === "suspended" && audioCtx.resume) audioCtx.resume();
+            var src = audioCtx.createMediaStreamSource(stream);
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 2048;
+            src.connect(analyser);
+            var buf = new Float32Array(analyser.fftSize);
+            var bytes = new Uint8Array(analyser.fftSize);
+            var bar = $("level").firstElementChild;
+            levelTimer = setInterval(function () {
+              var sum = 0, i, v;
+              if (analyser.getFloatTimeDomainData) {
+                analyser.getFloatTimeDomainData(buf);
+                for (i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+              } else {
+                analyser.getByteTimeDomainData(bytes);
+                for (i = 0; i < bytes.length; i++) { v = (bytes[i] - 128) / 128; sum += v * v; }
+              }
+              var rms = Math.sqrt(sum / analyser.fftSize);
+              if (rms > SILENCE_RMS) voicedFrames++;
+              bar.style.width = Math.min(100, Math.round(rms * 400)) + "%";
+            }, 100);
+          } catch (e) { voicedFrames = MIN_VOICED_FRAMES; }
+        }
+
+        function cleanupCapture() {
+          clearInterval(levelTimer); clearInterval(tickTimer);
+          levelTimer = tickTimer = null;
+          if (stream) stream.getTracks().forEach(function (t) { t.stop(); });
+          stream = null;
+          if (audioCtx && audioCtx.close) audioCtx.close().catch(function () {});
+          audioCtx = analyser = null;
+        }
+
+        function startRecording() {
+          if (recording) return;
+          showRecMsg("");
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === "undefined") {
+            showRecMsg("<strong>This browser can't record audio.</strong>Please open this page in the latest version of Chrome.");
+            return;
+          }
+          $("b-rec").disabled = true;
+          $("rec-status").textContent = "Asking for microphone…";
+          getStream().then(function (s) {
+            stream = s;
+            mimeType = pickMime();
+            try {
+              recorder = mimeType ? new MediaRecorder(stream, { mimeType: mimeType }) : new MediaRecorder(stream);
+            } catch (e) {
+              recorder = new MediaRecorder(stream);
+            }
+            mimeType = recorder.mimeType || mimeType || "audio/webm";
+            chunks = [];
+            voicedFrames = 0;
+            recorder.ondataavailable = function (e) { if (e.data && e.data.size) chunks.push(e.data); };
+            recorder.onstop = finishRecording;
+            recorder.start(1000);
+            startLevel();
+            recording = true;
+            startedAt = Date.now();
+            $("timer").textContent = "00:00";
+            tickTimer = setInterval(function () { $("timer").textContent = fmt((Date.now() - startedAt) / 1000); }, 250);
+            setRecUI(true);
+            $("rec-status").textContent = "Recording started.";
+            $("b-stop").focus();
+          }).catch(function (err) {
+            cleanupCapture();
+            $("b-rec").disabled = false;
+            $("rec-status").textContent = "";
+            showRecMsg(micHelp(err));
+          });
+        }
+
+        function stopRecording() {
+          if (!recording || !recorder) return;
+          recording = false;
+          rec = { duration: (Date.now() - startedAt) / 1000 };
+          $("b-stop").hidden = true;
+          if (recorder.state !== "inactive") recorder.stop(); else finishRecording();
+        }
+
+        function finishRecording() {
+          var duration = rec ? rec.duration : (Date.now() - startedAt) / 1000;
+          var voiced = voicedFrames;
+          cleanupCapture();
+          setRecUI(false);
+          $("b-rec").focus();
+          if (duration < MIN_SECONDS) {
+            rec = null; chunks = [];
+            $("timer").textContent = "00:00";
+            showRecMsg("Recording too short. Please try again — aim for at least 30 seconds.");
+            return;
+          }
+          if (voiced < MIN_VOICED_FRAMES) {
+            rec = null; chunks = [];
+            $("timer").textContent = "00:00";
+            showRecMsg("We couldn't hear anyone. Please move closer and try again.");
+            return;
+          }
+          var blob = new Blob(chunks, { type: mimeType });
+          chunks = [];
+          rec = { blob: blob, mime: mimeType, duration: Math.round(duration), url: URL.createObjectURL(blob), base64: null };
+          $("player").src = rec.url;
+          $("dur-label").textContent = "(" + fmt(rec.duration) + ")";
+          $("timer").textContent = "00:00";
+          $("rec-status").textContent = "Recording saved.";
+          show("s-where");
+        }
+
+        function discard() {
+          if (rec && rec.url) URL.revokeObjectURL(rec.url);
+          rec = null;
+          var p = $("player"); p.pause(); p.removeAttribute("src"); p.load();
+          $("dur-label").textContent = "";
+        }
+
+        function resetForm() {
+          $("location").value = ""; $("notes").value = "";
+          $("location").classList.remove("is-invalid"); $("loc-error").hidden = true;
+        }
+
+        function uploadState(which) {
+          ["u-busy", "u-done", "u-fail", "u-off"].forEach(function (id) { $(id).hidden = id !== which; });
+        }
+
+        function setProgress(pct, text) {
+          $("bar").firstElementChild.style.width = pct + "%";
+          $("bar").setAttribute("aria-valuenow", String(Math.round(pct)));
+          $("pct").textContent = text || Math.round(pct) + "%";
+        }
+
+        function toBase64(blob) {
+          return new Promise(function (resolve, reject) {
+            var r = new FileReader();
+            r.onload = function () { var s = String(r.result); resolve(s.slice(s.indexOf(",") + 1)); };
+            r.onerror = function () { reject(r.error); };
+            r.readAsDataURL(blob);
+          });
+        }
+
+        function upload() {
+          if (!rec || !rec.blob) { show("s-record"); return; }
+          show("s-upload");
+          if (SCRIPT_URL.indexOf("PASTE_YOUR") !== -1) { uploadState("u-off"); return; }
+          uploadState("u-busy");
+          setProgress(0, "Preparing…");
+          var ready = rec.base64 ? Promise.resolve(rec.base64) : toBase64(rec.blob).then(function (b) { rec.base64 = b; return b; });
+          ready.then(function (b64) {
+            var body = JSON.stringify({
+              audio: b64,
+              mime_type: rec.mime,
+              duration_seconds: rec.duration,
+              location: $("location").value,
+              notes: $("notes").value.trim(),
+              consent_given: true,
+              user_agent: navigator.userAgent
+            });
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", SCRIPT_URL, true);
+            xhr.setRequestHeader("Content-Type", "text/plain;charset=utf-8");
+            xhr.timeout = 300000;
+            xhr.upload.onprogress = function (e) {
+              if (e.lengthComputable) {
+                var p = (e.loaded / e.total) * 100;
+                setProgress(Math.min(p, 99), p >= 99 ? "Finishing…" : null);
+              }
+            };
+            xhr.onload = function () {
+              var res = null;
+              try { res = JSON.parse(xhr.responseText); } catch (e) { res = null; }
+              if (xhr.status >= 200 && xhr.status < 300 && res && res.ok === true) {
+                setProgress(100);
+                discard();
+                resetForm();
+                uploadState("u-done");
+                $("b-another").focus();
+              } else {
+                fail();
+              }
+            };
+            xhr.onerror = xhr.ontimeout = xhr.onabort = fail;
+            xhr.send(body);
+          }).catch(fail);
+        }
+
+        function fail() { uploadState("u-fail"); $("b-retry").focus(); }
+
+        // Wiring
+        $("b-agree").addEventListener("click", function () { consentGiven = true; show("s-how"); });
+        $("b-ready").addEventListener("click", function () { show("s-record"); });
+        $("b-rec").addEventListener("click", startRecording);
+        $("b-stop").addEventListener("click", stopRecording);
+        $("b-discard").addEventListener("click", function () { discard(); resetForm(); showRecMsg(""); show("s-record"); });
+        $("b-upload").addEventListener("click", function () {
+          if (!$("location").value) {
+            $("location").classList.add("is-invalid");
+            $("loc-error").hidden = false;
+            $("location").focus();
+            return;
+          }
+          upload();
+        });
+        $("location").addEventListener("change", function () {
+          if (this.value) { this.classList.remove("is-invalid"); $("loc-error").hidden = true; }
+        });
+        $("b-retry").addEventListener("click", upload);
+        $("b-back").addEventListener("click", function () { show("s-where"); });
+        $("b-back2").addEventListener("click", function () { show("s-where"); });
+        $("b-another").addEventListener("click", function () { showRecMsg(""); show("s-record"); });
+
+        // Warn before leaving mid-recording or with an unsent recording
+        window.addEventListener("beforeunload", function (e) {
+          if (recording || (rec && rec.blob)) { e.preventDefault(); e.returnValue = ""; }
+        });
+      })();
+    </script>
+  </body>
+</html>
